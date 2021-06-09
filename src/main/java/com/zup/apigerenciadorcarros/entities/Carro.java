@@ -4,18 +4,16 @@ import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_carro")
@@ -25,16 +23,22 @@ public class Carro implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name = "marca")
 	private String marca;
+	
+	
 	private String modelo;
 	private Integer ano;
 	
 	private String diaDeRodizio;
 	private boolean statusRodizio;
 	
-	@JsonIgnore
-	@ManyToMany(mappedBy = "carros")
-	private List<Usuario> usuarios = new ArrayList<>();
+	private Double valor;
+	
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
 	
 	public Carro() {
 	}
@@ -46,7 +50,7 @@ public class Carro implements Serializable {
 		this.modelo = modelo;
 		this.ano = ano;
 		this.diaDeRodizio = diaRodizio(ano);
-		this.statusRodizio = getStatusRodizio();
+		//this.statusRodizio = getStatusRodizio();
 	}
 
 
@@ -98,8 +102,8 @@ public class Carro implements Serializable {
 		return statusRodizio;
 	}
 	
-	public List<Usuario> getUsuarios() {
-		return usuarios;
+	public Usuario getUsuarios() {
+		return usuario;
 	}	
 	
 	//public Double/String getValorFipe(){

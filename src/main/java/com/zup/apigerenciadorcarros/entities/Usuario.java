@@ -13,9 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_usuario")
@@ -36,10 +38,8 @@ public class Usuario implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataDeNascimento;
 	
-	@ManyToMany
-	@JoinTable(name = "tb_usuario_carro", 
-	joinColumns = @JoinColumn(name = "usuario_id"),
-	inverseJoinColumns = @JoinColumn(name = "carro_id"))
+	@JsonIgnore
+	@OneToMany(mappedBy = "usuario")
 	private List<Carro> carros = new ArrayList<>();
 	
 	public Usuario() {
