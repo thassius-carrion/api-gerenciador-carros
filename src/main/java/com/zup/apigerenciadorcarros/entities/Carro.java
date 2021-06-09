@@ -1,8 +1,12 @@
 package com.zup.apigerenciadorcarros.entities;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,6 +45,8 @@ public class Carro implements Serializable {
 		this.marca = marca;
 		this.modelo = modelo;
 		this.ano = ano;
+		this.diaDeRodizio = diaRodizio(ano);
+		this.statusRodizio = getStatusRodizio();
 	}
 
 
@@ -83,28 +89,21 @@ public class Carro implements Serializable {
 		this.ano = ano;
 	}
 
-
 	public String getDiaDeRodizio() {
 		return diaDeRodizio;
 	}
 
-
-	/*public void setDiaDeRodizio(String diaDeRodizio) {
-		this.diaDeRodizio = diaDeRodizio;
-	}*/
-
-
-	public boolean isStatusRodizio() {
+	public boolean getStatusRodizio() {
+		statusRodizio = temRodizio();
 		return statusRodizio;
 	}
-
-	/*public void setStatusRodizio(boolean statusRodizio) {
-		this.statusRodizio = statusRodizio;
-	}*/
 	
 	public List<Usuario> getUsuarios() {
 		return usuarios;
 	}	
+	
+	//public Double/String getValorFipe(){
+	//}
 	
 	@Override
 	public int hashCode() {
@@ -130,5 +129,34 @@ public class Carro implements Serializable {
 			return false;
 		return true;
 	}
+	
+	private int lastDigit(int n) {
+		return (n % 10);
+	}
 
+	private String diaRodizio(int n) {
+		int v = lastDigit(n);
+		String rodizio = "";
+		switch(v){
+			case 0: case 1: rodizio = "segunda-feira"; break;
+			case 2: case 3: rodizio = "terça-feira"; break;
+			case 4: case 5: rodizio = "quarta-feira"; break;
+			case 6: case 7: rodizio = "quinta-feira"; break;
+			case 8: case 9: rodizio = "sexta-feira"; break;
+		}
+		return rodizio;
+	}
+	
+	private String pegarDiaDeHoje() {
+	    DayOfWeek dia = LocalDate.now().getDayOfWeek();
+	    return dia.getDisplayName(TextStyle.FULL, Locale.getDefault());
+	}
+	
+	private boolean temRodizio() {
+		if(pegarDiaDeHoje().equals(diaDeRodizio)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 }
