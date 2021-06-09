@@ -10,24 +10,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zup.apigerenciadorcarros.entities.Carro;
-import com.zup.apigerenciadorcarros.service.CarroService;
+import com.zup.apigerenciadorcarros.entities.Usuario;
+import com.zup.apigerenciadorcarros.service.UsuarioService;
 
 @RestController
-@RequestMapping(value = "/api/v1/carros")
-public class CarroController {
+@RequestMapping(value = "/api/v1/usuarios")
+public class UsuarioController {
 
 	@Autowired
-	private CarroService service;
+	private UsuarioService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Carro>> findAll(){
-		List<Carro> list = service.findAll();
+	public ResponseEntity<List<Usuario>> findAll(){
+		List<Usuario> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Carro> findById(@PathVariable Long id) {
-		Carro obj = service.findById(id);
+	public ResponseEntity<Usuario> findById(@PathVariable Long id) {
+		Usuario obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }

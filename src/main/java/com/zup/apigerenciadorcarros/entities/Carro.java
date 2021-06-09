@@ -1,12 +1,17 @@
 package com.zup.apigerenciadorcarros.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_carro")
@@ -15,7 +20,7 @@ public class Carro implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	private String marca;
 	private String modelo;
 	private Integer ano;
@@ -23,10 +28,14 @@ public class Carro implements Serializable {
 	private String diaDeRodizio;
 	private boolean statusRodizio;
 	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "carros")
+	private List<Usuario> usuarios = new ArrayList<>();
+	
 	public Carro() {
 	}
 	
-	public Carro(Integer id, String marca, String modelo, Integer ano) {
+	public Carro(Long id, String marca, String modelo, Integer ano) {
 		super();
 		this.id = id;
 		this.marca = marca;
@@ -35,12 +44,12 @@ public class Carro implements Serializable {
 	}
 
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -93,6 +102,10 @@ public class Carro implements Serializable {
 		this.statusRodizio = statusRodizio;
 	}*/
 	
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -100,7 +113,6 @@ public class Carro implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
