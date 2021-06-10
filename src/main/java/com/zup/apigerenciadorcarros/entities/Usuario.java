@@ -38,7 +38,6 @@ public class Usuario implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataDeNascimento;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "usuario")
 	private List<Carro> carros = new ArrayList<>();
 	

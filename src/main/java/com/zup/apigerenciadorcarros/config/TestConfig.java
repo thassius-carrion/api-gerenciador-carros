@@ -40,10 +40,13 @@ public class TestConfig implements CommandLineRunner {
 		Usuario u2 = new Usuario(null, "Fabio Mendes", "fabio@gmail.com", "165.730.048-09", new Date());
 		Usuario u3 = new Usuario(null, "Francisco Silva", "francisco@gmail.com", "344.332.468-58", new Date());
 		
+		usuarioRepository.saveAll(Arrays.asList(u1, u2, u3));
+		
 		u1.getCarros().add(c1);
 		u1.getCarros().add(c2);
 		u3.getCarros().add(c3);
 		
+		carroRepository.saveAll(Arrays.asList(c1, c2, c3));
 		usuarioRepository.saveAll(Arrays.asList(u1, u2, u3));
 		
 		
