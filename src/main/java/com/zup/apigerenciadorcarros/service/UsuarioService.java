@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.zup.apigerenciadorcarros.entities.Usuario;
 import com.zup.apigerenciadorcarros.repositories.UsuarioRepository;
+import com.zup.apigerenciadorcarros.service.exceptions.BadRequestException;
+import com.zup.apigerenciadorcarros.service.exceptions.ResourceNotFoundException;
 
 @Service
 public class UsuarioService {
@@ -21,7 +23,20 @@ public class UsuarioService {
 	
 	public Usuario findById(Long id) {
 		Optional<Usuario> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() ->  new ResourceNotFoundException(id, "Usuario"));
+	}
+	
+	public Usuario insert(Usuario obj) {
+		try {
+			return repository.save(obj);
+		} catch (RuntimeException e) {
+			throw new BadRequestException();
+		}
+		
+	}
+	
+	public void refresh(Usuario obj) {
+		repository.save(obj);
 	}
 	
 }

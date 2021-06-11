@@ -8,25 +8,31 @@ import org.springframework.stereotype.Service;
 
 import com.zup.apigerenciadorcarros.entities.Carro;
 import com.zup.apigerenciadorcarros.repositories.CarroRepository;
+import com.zup.apigerenciadorcarros.service.exceptions.BadRequestException;
+import com.zup.apigerenciadorcarros.service.exceptions.ResourceNotFoundException;
 
 @Service
 public class CarroService {
 
 	@Autowired
 	private CarroRepository repository;
-	
+
 	public List<Carro> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public Carro findById(Long id) {
 		Optional<Carro> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id, "Carro"));
 	}
-	
+
 	public Carro insert(Carro obj) {
-		obj.getDiaDeRodizio();
-		return repository.save(obj);
+		try {
+			obj.getDiaDeRodizio();
+			return repository.save(obj);
+		} catch (RuntimeException e) {
+			throw new BadRequestException();
+		}
 	}
-	
+
 }

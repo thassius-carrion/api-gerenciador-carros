@@ -27,32 +27,36 @@ public class Carro implements Serializable {
 	private Long id;
 	
 	//@Column(name = "marca")
+	@Column(nullable = false)
 	private String marca;
 	
-	
+	@Column(nullable = false)
 	private String modelo;
+	
+	@Column(nullable = false)
 	private Integer ano;
 	
 	private String diaDeRodizio;
 	private boolean statusRodizio;
 	
-	private Double valor;
+	//private Double valorFipe;
 	
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "usuario_id")
+	@JoinColumn(name = "usuario_id")   //, nullable = false
 	private Usuario usuario;
 	
 	public Carro() {
 	}
 	
-	public Carro(Long id, String marca, String modelo, Integer ano) {
+	public Carro(Long id, String marca, String modelo, Integer ano, Usuario usuario) {
 		super();
 		this.id = id;
 		this.marca = marca;
 		this.modelo = modelo;
 		this.ano = ano;
 		this.diaDeRodizio = diaRodizio(ano);
+		this.usuario = usuario;
 		//this.statusRodizio = getStatusRodizio();
 	}
 
@@ -100,11 +104,15 @@ public class Carro implements Serializable {
 	
 	public Usuario getUsuario() {
 		return usuario;
-	}	
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 	
 	//public Double/String getValorFipe(){
 	//}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
