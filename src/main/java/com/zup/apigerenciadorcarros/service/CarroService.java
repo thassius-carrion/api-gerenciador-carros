@@ -10,8 +10,10 @@ import com.zup.apigerenciadorcarros.entities.Carro;
 import com.zup.apigerenciadorcarros.entities.Usuario;
 import com.zup.apigerenciadorcarros.entities.dto.CarroRequestDTO;
 import com.zup.apigerenciadorcarros.entities.dto.clientfipe.MarcaDTO;
+import com.zup.apigerenciadorcarros.entities.dto.clientfipe.ModeloDTO;
+import com.zup.apigerenciadorcarros.entities.dto.clientfipe.ModeloDTO1;
 import com.zup.apigerenciadorcarros.repositories.CarroRepository;
-import com.zup.apigerenciadorcarros.service.clientfipe.MarcaClient;
+import com.zup.apigerenciadorcarros.service.clientfipe.FipeClient;
 import com.zup.apigerenciadorcarros.service.exceptions.BadRequestException;
 import com.zup.apigerenciadorcarros.service.exceptions.ResourceNotFoundException;
 
@@ -25,7 +27,8 @@ public class CarroService {
 	private UsuarioService usuarioService;
 	
 	@Autowired
-	private MarcaClient marcaClient;
+	private FipeClient fipeClient;
+	
 	
 		public List<Carro> findAll() {
 		return repository.findAll();
@@ -39,6 +42,7 @@ public class CarroService {
 	public Carro insert(CarroRequestDTO carroRequestDTO) {
 		try {
 			String codigoMarca = getCodigoMarca(carroRequestDTO.getMarca());
+			Integer codigoModelo = getCodigoModelo(carroRequestDTO.getModelo(), codigoMarca);
 			Carro carro = toCarro(carroRequestDTO);
 			carro.getDiaDeRodizio();
 			return repository.save(carro);
@@ -53,19 +57,40 @@ public class CarroService {
 	}
 	
 	private String getCodigoMarca(String marca) {
-		List<MarcaDTO> marcas = marcaClient.getMarcas();
-		Optional<MarcaDTO> optional = marcas.stream()
-				//.filter(m -> m.getName().equals(marca))
+		List<MarcaDTO> marcas = fipeClient.getMarcas();
+		Optional<MarcaDTO> optionalMarca = marcas.stream()
 				.filter(m -> compareName(m.getName(), marca))
 				.findFirst();
-		if(optional.isPresent()) {
-			return optional.get().getCodigo();
+		if(optionalMarca.isPresent()) {
+			return optionalMarca.get().getCodigo();
 		} 
 		throw new BadRequestException();
 	}
 	
-	private boolean compareName(String marca1, String marca2) {
-		return marca1.equals(marca2);
+	private Integer getCodigoModelo(String modelo, String codigoMarca) {
+		ModeloDTO modelosAnos = fipeClient.getModelosAnos(codigoMarca);
+		List<ModeloDTO1> modelos = modelosAnos.getModelos();
+		
+		Optional<ModeloDTO1> optionalModelo = modelos.stream()
+				.filter(m -> compareName(m.getNome(), modelo))
+				.findFirst();
+		
+		if(optionalModelo.isPresent()) {
+			return optionalModelo.get().getCodigo();
+		} 
+		throw new BadRequestException();
 	}
-
+	
+	/*private String getCodigoAno(String ano, String codigoMarca, Integer codigoModelo) {
+		List<MarcaDTO> anosTipos = fipeClient.getAnosTipos(codigoMarca, codigoModelo);
+		
+	}*/
+	
+	private boolean compareName(String name1, String name2) {
+		return name1.equals(name2);
+	}
+	
+	
+	
+	
 }
