@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.zup.apigerenciadorcarros.entities.Carro;
 import com.zup.apigerenciadorcarros.entities.Usuario;
-import com.zup.apigerenciadorcarros.service.CarroService;
 import com.zup.apigerenciadorcarros.service.UsuarioService;
 
 @RestController
@@ -24,9 +22,6 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService service;
-	
-	@Autowired
-	private CarroService carroService;
 	
 	@GetMapping
 	public ResponseEntity<List<Usuario>> findAll(){
@@ -47,13 +42,4 @@ public class UsuarioController {
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-	@PostMapping(value = "/{id}/addcarro")
-	public ResponseEntity<Carro> insert(@PathVariable Long id, @RequestBody Carro carro) {
-		Usuario usuario = service.findById(id);
-		carro = carroService.insert(carro);
-		carro.setUsuario(usuario);
-		service.refresh(usuario);
-		URI uri = ServletUriComponentsBuilder.fromPath("/api/v1/carros").path("/{id}").buildAndExpand(carro.getId()).toUri();
-		return ResponseEntity.created(uri).body(carro);
-	}
 }

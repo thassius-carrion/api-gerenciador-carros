@@ -32,7 +32,6 @@ public class UsuarioService {
 		} catch (RuntimeException e) {
 			throw new BadRequestException();
 		}
-		
 	}
 	
 	public void refresh(Usuario obj) {

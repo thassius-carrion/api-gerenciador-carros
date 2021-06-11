@@ -1,6 +1,5 @@
 package com.zup.apigerenciadorcarros.config;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;

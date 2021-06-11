@@ -39,11 +39,11 @@ public class Carro implements Serializable {
 	private String diaDeRodizio;
 	private boolean statusRodizio;
 	
-	//private Double valorFipe;
+	private String valorFipe;
 	
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "usuario_id")   //, nullable = false
+	@JoinColumn(name = "usuario_id", nullable = false)
 	private Usuario usuario;
 	
 	public Carro() {
@@ -57,7 +57,6 @@ public class Carro implements Serializable {
 		this.ano = ano;
 		this.diaDeRodizio = diaRodizio(ano);
 		this.usuario = usuario;
-		//this.statusRodizio = getStatusRodizio();
 	}
 
 	public Long getId() {
@@ -109,9 +108,10 @@ public class Carro implements Serializable {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
-	//public Double/String getValorFipe(){
-	//}
+
+	public String getValorFipe() {
+		return valorFipe;
+	}
 
 	@Override
 	public int hashCode() {
@@ -163,7 +163,7 @@ public class Carro implements Serializable {
 	private boolean temRodizio() {
 		if(pegarDiaDeHoje().equals(diaDeRodizio)) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
