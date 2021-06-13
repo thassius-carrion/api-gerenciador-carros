@@ -1,44 +1,31 @@
 package com.zup.apigerenciadorcarros.config;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
-import com.zup.apigerenciadorcarros.entities.Carro;
 import com.zup.apigerenciadorcarros.entities.Usuario;
-import com.zup.apigerenciadorcarros.repositories.CarroRepository;
-import com.zup.apigerenciadorcarros.repositories.UsuarioRepository;
+import com.zup.apigerenciadorcarros.service.UsuarioService;
 
 @Configuration
 public class TestConfig implements CommandLineRunner {
-	
+		
 	@Autowired
-	private CarroRepository carroRepository;
-	
-	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private UsuarioService usuarioService;
 	
 	@Override
 	public void run(String... args) throws Exception {
-		
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
 		
 		Usuario u1 = new Usuario(null, "Thassius Carrion", "thassius@gmail.com", "349.332.468-58", new Date());
 		Usuario u2 = new Usuario(null, "Fabio Mendes", "fabio@gmail.com", "165.730.048-09", new Date());
 		Usuario u3 = new Usuario(null, "Francisco Silva", "francisco@gmail.com", "344.332.468-58", new Date());
 		
+		usuarioService.insert(u1);
+		usuarioService.insert(u2);
+		usuarioService.insert(u3);
 		
-		Carro c1 = new Carro(null, "Fiat", "Palio", 2004, 1, "30.000", u1);
-		Carro c2 = new Carro(null, "Fiat", "Punto", 2012, 1, "32.000", u1);
-		Carro c3 = new Carro(null, "VW", "T-Cross", 2025, 1, "39.000", u2);
-		
-		usuarioRepository.saveAll(Arrays.asList(u1, u2, u3));
-		carroRepository.saveAll(Arrays.asList(c1, c2, c3));
-
 	}
 
 }

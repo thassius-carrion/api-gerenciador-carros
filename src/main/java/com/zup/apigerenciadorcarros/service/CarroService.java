@@ -98,7 +98,6 @@ public class CarroService {
 		return getValorFipe(codigoAno, codigoMarca, codigoModelo);
 	}
 	
-	
 	private boolean compareName(String name1, String name2) {
 		return name1.equals(name2);
 	}
