@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.zup.apigerenciadorcarros.entities.dto.clientfipe.CarroFipeDTO;
 import com.zup.apigerenciadorcarros.entities.dto.clientfipe.MarcaDTO;
 import com.zup.apigerenciadorcarros.entities.dto.clientfipe.ModeloDTO;
 
@@ -20,4 +21,8 @@ public interface FipeClient {
 	
 	@GetMapping("/{codigo1}/modelos/{codigo2}/anos")
 	List<MarcaDTO> getAnosTipos(@PathVariable String codigo1, @PathVariable Integer codigo2);
+	
+	@GetMapping("/{codigo1}/modelos/{codigo2}/anos/{codigo3}")
+	CarroFipeDTO getCarroFipe(@PathVariable String codigo1, @PathVariable Integer codigo2, @PathVariable String codigo3);
+	
 }

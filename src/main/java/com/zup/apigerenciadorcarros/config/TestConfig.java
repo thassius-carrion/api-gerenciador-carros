@@ -32,9 +32,9 @@ public class TestConfig implements CommandLineRunner {
 		Usuario u3 = new Usuario(null, "Francisco Silva", "francisco@gmail.com", "344.332.468-58", new Date());
 		
 		
-		Carro c1 = new Carro(null, "Fiat", "Palio", 2004, u1);
-		Carro c2 = new Carro(null, "Fiat", "Punto", 2012, u1);
-		Carro c3 = new Carro(null, "VW", "T-Cross", 2025, u2);
+		Carro c1 = new Carro(null, "Fiat", "Palio", 2004, 1, "30.000", u1);
+		Carro c2 = new Carro(null, "Fiat", "Punto", 2012, 1, "32.000", u1);
+		Carro c3 = new Carro(null, "VW", "T-Cross", 2025, 1, "39.000", u2);
 		
 		usuarioRepository.saveAll(Arrays.asList(u1, u2, u3));
 		carroRepository.saveAll(Arrays.asList(c1, c2, c3));

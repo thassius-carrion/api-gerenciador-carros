@@ -2,6 +2,7 @@ package com.zup.apigerenciadorcarros.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.lang.IllegalArgumentException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.zup.apigerenciadorcarros.entities.Carro;
 import com.zup.apigerenciadorcarros.entities.Usuario;
 import com.zup.apigerenciadorcarros.entities.dto.CarroRequestDTO;
+import com.zup.apigerenciadorcarros.entities.dto.clientfipe.CarroFipeDTO;
 import com.zup.apigerenciadorcarros.entities.dto.clientfipe.MarcaDTO;
 import com.zup.apigerenciadorcarros.entities.dto.clientfipe.ModeloDTO;
 import com.zup.apigerenciadorcarros.entities.dto.clientfipe.ModeloDTO1;
@@ -41,21 +43,14 @@ public class CarroService {
 
 	public Carro insert(CarroRequestDTO carroRequestDTO) {
 		try {
-			String codigoMarca = getCodigoMarca(carroRequestDTO.getMarca());
-			Integer codigoModelo = getCodigoModelo(carroRequestDTO.getModelo(), codigoMarca);
-			Carro carro = toCarro(carroRequestDTO);
-			carro.getDiaDeRodizio();
+			String valorFipe = getValorFinal(carroRequestDTO);
+			Carro carro = toCarro(carroRequestDTO, valorFipe);
 			return repository.save(carro);
-		} catch (RuntimeException e) {
+		} catch (IllegalArgumentException e) {
 			throw new BadRequestException();
 		}
 	}
-	
-	private Carro toCarro(CarroRequestDTO carroRequestDTO) {
-		Usuario usuario = usuarioService.findById(carroRequestDTO.getUsuarioId());
-		return new Carro(null, carroRequestDTO.getMarca(), carroRequestDTO.getModelo(), carroRequestDTO.getAno(), usuario);
-	}
-	
+		
 	private String getCodigoMarca(String marca) {
 		List<MarcaDTO> marcas = fipeClient.getMarcas();
 		Optional<MarcaDTO> optionalMarca = marcas.stream()
@@ -63,34 +58,59 @@ public class CarroService {
 				.findFirst();
 		if(optionalMarca.isPresent()) {
 			return optionalMarca.get().getCodigo();
-		} 
+	    } 
 		throw new BadRequestException();
 	}
 	
 	private Integer getCodigoModelo(String modelo, String codigoMarca) {
 		ModeloDTO modelosAnos = fipeClient.getModelosAnos(codigoMarca);
-		List<ModeloDTO1> modelos = modelosAnos.getModelos();
-		
+		List<ModeloDTO1> modelos = modelosAnos.getModelos();	
 		Optional<ModeloDTO1> optionalModelo = modelos.stream()
 				.filter(m -> compareName(m.getNome(), modelo))
 				.findFirst();
-		
 		if(optionalModelo.isPresent()) {
 			return optionalModelo.get().getCodigo();
 		} 
 		throw new BadRequestException();
 	}
 	
-	/*private String getCodigoAno(String ano, String codigoMarca, Integer codigoModelo) {
+	private String getCodigoAno(String toAnoTipo, String codigoMarca, Integer codigoModelo) {
 		List<MarcaDTO> anosTipos = fipeClient.getAnosTipos(codigoMarca, codigoModelo);
-		
-	}*/
+		Optional<MarcaDTO> optionalAnos = anosTipos.stream()
+				.filter(anoTipo -> compareName(toAnoTipo, anoTipo.getCodigo()))
+				.findFirst();
+		if(optionalAnos.isPresent()) {
+			return optionalAnos.get().getCodigo();
+		} 
+		throw new BadRequestException();
+	}
+	
+	private String getValorFipe(String codigoAno, String codigoMarca, Integer codigoModelo) {
+		CarroFipeDTO carroFipeDTO = fipeClient.getCarroFipe(codigoMarca, codigoModelo, codigoAno);
+		return carroFipeDTO.getValor();
+	}
+	
+	private String getValorFinal(CarroRequestDTO carroRequestDTO) {
+		String codigoMarca = getCodigoMarca(carroRequestDTO.getMarca());
+		Integer codigoModelo = getCodigoModelo(carroRequestDTO.getModelo(), codigoMarca);
+		String codigoAno = getCodigoAno(toAnoTipo(carroRequestDTO.getAno(), carroRequestDTO.getTipoCombustivel()),
+				codigoMarca, codigoModelo);
+		return getValorFipe(codigoAno, codigoMarca, codigoModelo);
+	}
+	
 	
 	private boolean compareName(String name1, String name2) {
 		return name1.equals(name2);
 	}
 	
+	private String toAnoTipo(Integer ano, Integer tipoCombustivel) {
+		return ano+"-"+tipoCombustivel;
+	}
 	
-	
+	private Carro toCarro(CarroRequestDTO carroRequestDTO, String valorFipe) {
+		Usuario usuario = usuarioService.findById(carroRequestDTO.getUsuarioId());
+		return new Carro(null, carroRequestDTO.getMarca(), carroRequestDTO.getModelo(), 
+				carroRequestDTO.getAno(), carroRequestDTO.getTipoCombustivel(), valorFipe, usuario);
+	}
 	
 }

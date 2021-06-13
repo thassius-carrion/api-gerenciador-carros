@@ -6,6 +6,7 @@ public class CarroRequestDTO {
 	private String marca;
 	private String modelo;
 	private Integer ano;
+	private Integer tipoCombustivel;
 	
 	public Long getUsuarioId() {
 		return usuarioId;
@@ -18,5 +19,8 @@ public class CarroRequestDTO {
 	}
 	public Integer getAno() {
 		return ano;
+	}
+	public Integer getTipoCombustivel() {
+		return tipoCombustivel;
 	}	
 }

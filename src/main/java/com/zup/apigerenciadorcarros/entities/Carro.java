@@ -26,7 +26,6 @@ public class Carro implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//@Column(name = "marca")
 	@Column(nullable = false)
 	private String marca;
 	
@@ -36,9 +35,11 @@ public class Carro implements Serializable {
 	@Column(nullable = false)
 	private Integer ano;
 	
+	@Column(nullable = false)
+	private Integer tipoCombustivel;
+	
 	private String diaDeRodizio;
 	private boolean statusRodizio;
-	
 	private String valorFipe;
 	
 	@JsonIgnore
@@ -49,14 +50,17 @@ public class Carro implements Serializable {
 	public Carro() {
 	}
 	
-	public Carro(Long id, String marca, String modelo, Integer ano, Usuario usuario) {
+	public Carro(Long id, String marca, String modelo, Integer ano, Integer tipoCombustivel, String valorFipe, Usuario usuario) {
 		super();
 		this.id = id;
 		this.marca = marca;
 		this.modelo = modelo;
 		this.ano = ano;
-		this.diaDeRodizio = diaRodizio(ano);
+		this.tipoCombustivel = tipoCombustivel;
+		this.valorFipe = valorFipe;
 		this.usuario = usuario;
+		this.diaDeRodizio = diaRodizio(ano);
+		this.statusRodizio = temRodizio();
 	}
 
 	public Long getId() {
@@ -90,9 +94,16 @@ public class Carro implements Serializable {
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
+	
+	public Integer getTipoCombustivel() {
+		return tipoCombustivel;
+	}
+
+	public void setTipoCombustivel(Integer tipoCombustivel) {
+		this.tipoCombustivel = tipoCombustivel;
+	}
 
 	public String getDiaDeRodizio() {
-		diaDeRodizio = diaRodizio(ano);
 		return diaDeRodizio;
 	}
 
@@ -167,4 +178,5 @@ public class Carro implements Serializable {
 			return false;
 		}
 	}
+
 }
